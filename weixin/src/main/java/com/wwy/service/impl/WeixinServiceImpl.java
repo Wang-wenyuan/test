@@ -1,7 +1,9 @@
 package com.wwy.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wwy.domain.Articles;
 import com.wwy.domain.BaseMessage;
+import com.wwy.domain.NewsMessage;
 import com.wwy.domain.TextMessage;
 import com.wwy.service.WeixinService;
 import com.wwy.utils.TuLingJiQIRenUtils;
@@ -12,10 +14,7 @@ import org.dom4j.io.SAXReader;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletInputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author: wwy
@@ -51,20 +50,85 @@ public class WeixinServiceImpl implements WeixinService {
      * @return
      */
     public BaseMessage dealTextMessage(Map<String, String> map,String text) {
+        if(text==null && "".equals("")){
+            //返回图文消息
+            NewsMessage newsMessage = getNewsMessage(map);
+            return newsMessage;
+        }else{
+            //返回文本消息
+            TextMessage textMessage = getTextMessage(map, text);
+            return textMessage;
+        }
+    }
+
+    /**
+     * 返回文本消息
+     * @return
+     */
+    @Override
+    public TextMessage getTextMessage(Map<String,String> map,String text) {
         String toUserName = map.get("ToUserName");
         String fromUserName = map.get("FromUserName");
-        String msgType = "text";
         String createTime = map.get("CreateTime");
-        String msgId = map.get("MsgId");
+        String msgType = "text";
         TextMessage textMessage = new TextMessage();
         textMessage.setToUserName(fromUserName);
         textMessage.setFromUserName(toUserName);
         textMessage.setMsgType(msgType);
         textMessage.setCreateTime(System.currentTimeMillis()/1000+"");
         textMessage.setContent(text);
-        textMessage.setMsgId(msgId);
         textMessage.setCreateTime(createTime);
         return textMessage;
+    }
+
+    /**
+     * 返回图文消息
+     * http://mmbiz.qpic.cn/mmbiz_jpg/wnBrwkqwibcJjs5wN9jaA9W80wkJib4MZeq5cDWHRtyLj6RALKpZJmVYReX3rnbRFMUXLkibTASwR3d9qtCUmreZA/0
+     * @param map
+     * @return
+     *
+     * <xml>
+     *   <ToUserName><![CDATA[toUser]]></ToUserName>
+     *   <FromUserName><![CDATA[fromUser]]></FromUserName>
+     *   <CreateTime>12345678</CreateTime>
+     *   <MsgType><![CDATA[news]]></MsgType>
+     *   <ArticleCount>1</ArticleCount>
+     *   <Articles>
+     *     <item>
+     *       <Title><![CDATA[title1]]></Title>
+     *       <Description><![CDATA[description1]]></Description>
+     *       <PicUrl><![CDATA[picurl]]></PicUrl>
+     *       <Url><![CDATA[url]]></Url>
+     *     </item>
+     *   </Articles>
+     * </xml>
+     */
+    @Override
+    public NewsMessage getNewsMessage(Map<String, String> map) {
+        String toUserName = map.get("ToUserName");
+        String fromUserName = map.get("FromUserName");
+        String createTime = map.get("CreateTime");
+        String msgType = "news";
+        String articleCount = "1";
+        String title = "甲铁城的卡巴内瑞";
+        String description = "三连";
+        String picUrl = "http://mmbiz.qpic.cn/mmbiz_jpg/wnBrwkqwibcJjs5wN9jaA9W80wkJib4MZeW8VymFnBMu0cj4zPStrqLqJUU4ahchOpjMOXZHQzE3RjqDSjpZG8yw/0";
+        String url = "https://www.bilibili.com/video/av11556174";
+        NewsMessage newsMessage = new NewsMessage();
+        newsMessage.setToUserName(fromUserName);
+        newsMessage.setFromUserName(toUserName);
+        newsMessage.setCreateTime(createTime);
+        newsMessage.setMsgType(msgType);
+        newsMessage.setArticleCount(articleCount);
+        List<Articles> list = new ArrayList<>();
+        Articles articles = new Articles();
+        articles.setTitle(title);
+        articles.setdescription(description);
+        articles.setPicUrl(picUrl);
+        articles.setUrl(url);
+        list.add(articles);
+        newsMessage.setArticles(list);
+        return newsMessage;
     }
 
     /**

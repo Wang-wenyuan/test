@@ -15,18 +15,15 @@ public class BaseMessage {
     private String createTime;
     @XStreamAlias("MsgType")
     private String msgType;
-    @XStreamAlias("MsgId")
-    private String msgId;
 
     public BaseMessage() {
     }
 
-    public BaseMessage(String toUserName, String fromUserName, String createTime, String msgType, String msgId) {
+    public BaseMessage(String toUserName, String fromUserName, String createTime, String msgType) {
         this.toUserName = toUserName;
         this.fromUserName = fromUserName;
         this.createTime = createTime;
         this.msgType = msgType;
-        this.msgId = msgId;
     }
 
     public String getToUserName() {
@@ -61,13 +58,6 @@ public class BaseMessage {
         this.msgType = msgType;
     }
 
-    public String getMsgId() {
-        return msgId;
-    }
-
-    public void setMsgId(String msgId) {
-        this.msgId = msgId;
-    }
 
     @Override
     public String toString() {
@@ -76,7 +66,7 @@ public class BaseMessage {
                 ", fromUserName='" + fromUserName + '\'' +
                 ", createTime='" + createTime + '\'' +
                 ", msgType='" + msgType + '\'' +
-                ", msgId='" + msgId + '\'' +
+                ","  +
                 '}';
     }
 }

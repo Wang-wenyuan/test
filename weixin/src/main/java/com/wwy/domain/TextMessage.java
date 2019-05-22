@@ -19,8 +19,8 @@ public class TextMessage extends BaseMessage{
         this.content = content;
     }
 
-    public TextMessage(String toUserName, String fromUserName, String createTime, String msgType, String msgId, String content) {
-        super(toUserName, fromUserName, createTime, msgType, msgId);
+    public TextMessage(String toUserName, String fromUserName, String createTime, String msgType, String content) {
+        super(toUserName, fromUserName, createTime, msgType);
         this.content = content;
     }
 

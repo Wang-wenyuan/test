@@ -1,6 +1,7 @@
 package com.wwy.service;
 
 import com.wwy.domain.BaseMessage;
+import com.wwy.domain.NewsMessage;
 import com.wwy.domain.TextMessage;
 
 import javax.servlet.ServletInputStream;
@@ -25,6 +26,19 @@ public interface WeixinService {
      * @return
      */
     BaseMessage dealTextMessage(Map<String,String> map,String text);
+
+    /**
+     * 返回图文消息
+     * @param map
+     * @return
+     */
+    NewsMessage getNewsMessage(Map<String,String> map);
+
+    /**
+     * 返回文本消息
+     * @return
+     */
+    TextMessage getTextMessage(Map<String,String> map,String text);
 
     /**
      * 图灵机器人

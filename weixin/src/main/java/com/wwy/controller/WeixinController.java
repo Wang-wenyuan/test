@@ -1,6 +1,8 @@
 package com.wwy.controller;
 import com.thoughtworks.xstream.XStream;
+import com.wwy.domain.Articles;
 import com.wwy.domain.BaseMessage;
+import com.wwy.domain.NewsMessage;
 import com.wwy.domain.TextMessage;
 import com.wwy.service.WeixinService;
 import com.wwy.utils.WeiXinUtils;
@@ -71,8 +73,13 @@ public class WeixinController {
             //根据消息类型调用不同的方法
             switch (map.get("MsgType")){
                 case "text":
-                    String content = weixinService.getTuLingResult(map.get("Content"));
-                    message = weixinService.dealTextMessage(map,content);
+                    if("bilibili".equals(map.get("Content"))){
+                        message = weixinService.dealTextMessage(map,null);
+                    }else{
+                        String content = weixinService.getTuLingResult(map.get("Content"));
+                        message = weixinService.dealTextMessage(map,content);
+                    }
+
                     break;
                 case "image":
                     break;
@@ -95,7 +102,10 @@ public class WeixinController {
             XStream xStream = new XStream();
             xStream.processAnnotations(TextMessage.class);
             xStream.processAnnotations(BaseMessage.class);
+            xStream.processAnnotations(NewsMessage.class);
+            xStream.processAnnotations(Articles.class);
             String xml = xStream.toXML(message);
+            System.out.println(xml);
             return xml;
 
         } catch (Exception e) {
